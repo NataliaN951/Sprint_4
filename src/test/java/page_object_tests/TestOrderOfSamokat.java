@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.SamokatOrderPage;
 
 public class TestOrderOfSamokat extends TestBase {
@@ -19,12 +20,9 @@ public class TestOrderOfSamokat extends TestBase {
         SamokatOrderPage samokatOrderPage = new SamokatOrderPage(driver);
 
         samokatOrderPage.open();
-        samokatOrderPage.clickFirstOrderButton(driver);
-        samokatOrderPage.checkFirstScreenForOrderSamokat(
-                driver, "Макс", "Максимов", "Москва, Кутузовский проспект, 16", "89771112233");
-        samokatOrderPage.checkSecondScreenForOrderSamokat(driver, "20.02.2023", "Позвонить за час");
-        samokatOrderPage.checkConfirmOrder(driver);
-        samokatOrderPage.checkOrderInformation(driver);
+        samokatOrderPage.clickFirstOrderButton(driver, "Макс", "Максимов",
+                "Москва, Кутузовский проспект, 16", 1, "89771112233",
+                "20.02.2023", 0, "Позвонить за час");
     }
 
     @Test
@@ -37,12 +35,9 @@ public class TestOrderOfSamokat extends TestBase {
         SamokatOrderPage samokatOrderPage = new SamokatOrderPage(driver);
 
         samokatOrderPage.open();
-        samokatOrderPage.clickSecondOrderButton(driver);
-        samokatOrderPage.checkFirstScreenForOrderSamokat(
-                driver, "Ирина", "Климова", "Москва, Академика  Королева, 32", "89774569988");
-        samokatOrderPage.checkSecondScreenForOrderSamokat(driver, "20.02.2023", "Позвонить");
-        samokatOrderPage.checkConfirmOrder(driver);
-        samokatOrderPage.checkOrderInformation(driver);
+        samokatOrderPage.clickSecondOrderButton(driver, "Ирина", "Климова",
+                "Москва, Академика  Королева, 32", 224, "89774569988",
+                "23.03.2023", 1, "Позвонить");
     }
 
     @AfterEach

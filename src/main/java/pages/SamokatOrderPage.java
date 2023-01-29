@@ -1,9 +1,6 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 public class SamokatOrderPage {
     private final WebDriver driver;
@@ -24,7 +21,7 @@ public class SamokatOrderPage {
     //Поле Станция метро
     private final By stationField = By.xpath(".//input[@placeholder='* Станция метро']");
     //Название станции метро
-    private final By stationName = By.xpath(".//div[@class='select-search__select']//*[text()='Бульвар Рокоссовского']");
+    private final By stationName = By.className("select-search__row");
     //Поле Телефон
     private final By phoneField = By.xpath(".//input[@placeholder='* Телефон: на него позвонит курьер']");
     //Кнопка Далее
@@ -33,14 +30,12 @@ public class SamokatOrderPage {
     private final By titleOfSecondOrderForm = By.xpath(".//div[@class='Order_Header__BZXOb'][text()='Про аренду']");
     //Поле Когда привезти самокат
     private final By dateField = By.xpath(".//input[@placeholder='* Когда привезти самокат']");
-    //Дата в календаре
-    private final By date = By.xpath(".//div[@class='react-datepicker__week'][4]/div[1]");
     //Поле Срок аренды
     private final By periodField = By.xpath(".//div[@class='Dropdown-placeholder']");
     //Срок аренды в списке
     private final By period = By.xpath(".//div[@class='Dropdown-option'][1]");
     //Чек-бокс цвет
-    private final By colour = By.xpath(".//input[@id ='black']");
+    private final By colour = By.xpath(".//label[@class ='Checkbox_Label__3wxSf']");
     //Поле Комментарий для курьера
     private final By commentField = By.xpath(".//input[@placeholder='Комментарий для курьера']");
     //Кнопка заказать
@@ -61,42 +56,56 @@ public class SamokatOrderPage {
         driver.get(url);
     }
 
-    public void clickFirstOrderButton(WebDriver driver) {
+    public void clickFirstOrderButton(
+            WebDriver driver, String name, String surname, String address,
+            int stationIndex, String phone, String orderDate, int colourIndex, String comments) {
         driver.findElement(cookiesButton).click();
         driver.findElement(firstOrderbutton).click();
+        checkFirstScreenForOrderSamokat(driver, name, surname, address, stationIndex, phone);
+        checkSecondScreenForOrderSamokat(driver, orderDate, colourIndex, comments);
+        checkConfirmOrder(driver);
+        checkOrderInformation(driver);
     }
 
-    public void clickSecondOrderButton(WebDriver driver) {
+    public void clickSecondOrderButton(
+            WebDriver driver, String name, String surname, String address,
+            int stationIndex, String phone, String orderDate, int colourIndex, String comments) {
         driver.findElement(cookiesButton).click();
         WebElement element = driver.findElement(secondOrderbutton);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
         driver.findElement(secondOrderbutton).click();
+        checkFirstScreenForOrderSamokat(driver, name, surname, address, stationIndex, phone);
+        checkSecondScreenForOrderSamokat(driver, orderDate, colourIndex, comments);
+        checkConfirmOrder(driver);
+        checkOrderInformation(driver);
     }
 
     public void checkFirstScreenForOrderSamokat(
-            WebDriver driver, String name, String surname, String address, String phone) {
+            WebDriver driver, String name, String surname, String address, int stationIndex, String phone) {
         driver.findElement(titleOfFirstOrderForm).isDisplayed();
 
         driver.findElement(nameField).sendKeys(name);
         driver.findElement(surnameField).sendKeys(surname);
         driver.findElement(addressField).sendKeys(address);
         driver.findElement(stationField).click();
-        driver.findElement(stationName).click();
+        WebElement element = driver.findElements(stationName).get(stationIndex);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
         driver.findElement(phoneField).sendKeys(phone);
 
         driver.findElement(nextButton).click();
-
     }
 
     public void checkSecondScreenForOrderSamokat(
-            WebDriver driver, String orderDate, String comments) {
+            WebDriver driver, String orderDate, int colourIndex, String comments) {
         driver.findElement(titleOfSecondOrderForm).isDisplayed();
 
-        driver.findElement(dateField).sendKeys(orderDate);
-        driver.findElement(date).click();
+        driver.findElement(dateField).sendKeys(orderDate, Keys.ENTER);
         driver.findElement(periodField).click();
         driver.findElement(period).click();
-        driver.findElement(colour).click();
+        WebElement element = driver.findElements(colour).get(colourIndex);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
         driver.findElement(commentField).sendKeys(comments);
 
         driver.findElement(orderButton).click();

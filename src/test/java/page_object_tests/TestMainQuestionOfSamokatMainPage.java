@@ -1,5 +1,6 @@
 package page_object_tests;
 
+import data.DataForTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -14,9 +15,10 @@ public class TestMainQuestionOfSamokatMainPage extends TestBase {
         driver = new ChromeDriver();
 
         SamokatMainPage samokatMainPage = new SamokatMainPage(driver);
+        DataForTest dataForTest = new DataForTest();
         samokatMainPage.open();
         samokatMainPage.mainQuestionIsDisplayed(driver);
-        samokatMainPage.checkPoint(driver);
+        samokatMainPage.checkPoint(driver, dataForTest.getExpectedResults(), dataForTest.getArrowOfQuestion(), dataForTest.getPointOfQuestion());
     }
 
     @AfterEach
